@@ -361,4 +361,10 @@ function mNew( phi, psi_l, cc, tl, z, m, ared, dt)
 end
 --Malic acid concentration
 
-  
+--[[Don't think I am doing this loop correctly
+function CAM:process(adv,t)
+  adv = self.adv
+  t = self.t
+  for i = 1,adv do
+    local dx = self.......trail off 
+    ]]
