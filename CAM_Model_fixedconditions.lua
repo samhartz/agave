@@ -102,55 +102,15 @@ ARED = 1.
 LIGHT_ATTEN = 1.
 
 --- CODE FOR RUNNING MODEL (DEFINITIONS BELOW)
-
--- INITIAL CONDITIONS:
-
 duration = 10 -- days
 
-ca = 400      -- atmospheric CO2 concentration, ppm
-ta = 293      -- atmospheric temperature, deg. K
-rh = 80       -- relative humidity, percent
-phi = 500     -- solar radiation, W/m2
-tl = ta       -- assume leaf temp equal to atmospheric
-psi_l = -0.5  -- MPa; leaf water potential
-
-tempC = ta - 273. -- convert to K
-psat = A_SAT*np.exp((B_SAT*(tempC))/(C_SAT + tempC)) -- saturated vapor pressure in Pa
-qa = 0.622*rh/100.*psat/P_ATM --needs to be in kg/kg, specific humidity in atmosphere
-
-cs = ca
-ci = ciNew{
-  cs={},
-  ta={},
-  qa={}
-  }
-cm = cmNew{
-  cs={}, 
-  ta={}, 
-  qa={}
-  }
-z = Z0
-m = M0
-cc = ccNew(cs, ta, qa, z, m)
-cx = cc
-a_a = {}
-z_a = {}
-m_a = {}
-asc_a = {}
-asv_a = {}
-avc_a = {}
-aphicitl_a = {}
-aphicctl_a = {}
-ci_a = {}
-cc_a = {}
-cs_a = {}
-
-
+--print(ARED)
 --General Functions
 
 function steps(duration, timestepM)
   return math.floor((duration*24*60)/timestepM)
 end
+
 --Change Duration of simulation to number of timesteps according to timestep value
 
 function VPD(ta, qa)
@@ -159,7 +119,7 @@ end
 --Vapor oressure deficit (Pa)
 
 function esat(ta)
-  return A_SAT*(math.exp(B_SAT*(ta - 273.))/(C_SAT + ta - 273))
+  return A_SAT*(math.exp(B_SAT*(ta - 273.)/(C_SAT + ta - 273)))
 end
 --Saturated vapor pressure (Pa)
 
@@ -208,24 +168,24 @@ end
 --Max. e- transport rate (umol/(m^2s))
 
 function j(phi, tl)
-  return min((phi*10^6)/(EP*NA)*KAPPA_2*.5, jmax(tl))
+  return math.min((phi*10^6)/(EP*NA)*KAPPA_2*.5, jmax(tl))
 end
 --Electron transport rate (umol/(m^2s))
 
 function jpar(phi, tl)
-  return min(phi*KAPPA_2, jmax(tl))
+  return math.min(phi*KAPPA_2, jmax(tl))
 end
 --Net photosynthetic demand for CO2 (umol/(m^2s^1))
 
 function a_phiciTl(phi, ci, tl, ared)
-  return max(min(a_c(ci,tl, 1), a_q(phi, ci, tl)),0)*ared
+  return math.max(math.min(a_c(ci,tl, 1), a_q(phi, ci, tl)),0)*ared
 end
 --Vulnerability curve for water potential (-)
 
 function a_psilc02(psi_l)
   if psi_l < PSILA0 then
     return 0 
-  elseif PSILA0 <= psi_l <= PSILA1 then
+  elseif PSILA0 <= psi_l and psi_l <= PSILA1 then
     return ((psi_l - PSILA0)/(PSILA1 - PSILA0))
   else
     return 1
@@ -234,20 +194,20 @@ end
   --
   
 function r_d(tl)
-    return RD0*math.exp(HKR/(R*TO)*(1 - TO/tl))
+  return RD0*math.exp(HKR/(R*TO)*(1 - TO/tl))
 end
   --Dark respiration flux (umol/(m^2s))
   
 function csNew(an)
-    return ca - an/GA
+  return ca - an/GA
 end
   --CO2 concentration at leaf surface (ppm)
   
 function ciNew(cs, ta, qa)
-    return cs(1.-1./(A1*fD(VPD(ta, qa))))
+  return cs*(1.-1./(A1*fD(VPD(ta, qa))))
 end
   --CO2 concentration in mesophyll cytosol (ppm)
-  
+
 function cmNew(cs, ta, qa)
   return ciNew(cs, ta, qa)
 end
@@ -257,11 +217,11 @@ function fD(vpd)
     if vpd < 0.1 then
       return 1
     else
-      return 3/13/sqrt(vpd/1000)
+      return 3/13/math.sqrt(vpd/1000)
     end
 end
   --Stomatal response to vapor pressure deficit (-)
-  
+ 
 function gsc(phi, ta, psi_l, qa, tl, cx, ared, ...)
     if an(phi, psi_l, cx, ared, ...) < 0. then  
       return 0 
@@ -288,7 +248,7 @@ end
 --Flux of dark respiration to calvin cycle (umol/(m^2s))
 
 function f_o(z)
-	return exp(-(z/MU)^CIRC_3)
+	return math.exp(-(z/MU)^CIRC_3)
 end
 --Circadian order function (-)
 
@@ -344,27 +304,79 @@ function zNew( phi, m, z, tl, dt)
 end
 --
 
-function an( phi, psi_l, tl, ci, ared)
-	--Photosynthetic rate, per unit leaf area (umol/(m^2s))
+function an(phi, psi_l, tl, ci, ared)
 	return a_sc(phi, psi_l, tl, ci, z, m, ared) + a_sv(phi, tl, psi_l, z, m) 
 end
 --Photosynthetic rate, per unit leaf area (umol/(m^2s))
 
-function ccNew( cs, ta, qa, z, m)
-	--CO2 concentration in mesophyll cytosol resulting from malic acid decarboxylation (ppm)
+function ccNew(cs, ta, qa, z, m)
+--CO2 concentration in mesophyll cytosol resulting from malic acid decarboxylation (ppm)
 	return cmNew(cs, ta, qa) + f_c(z, m)*C0
 end
 --CO2 concentration in mesophyll cytosol resulting from malic acid decarboxylation (ppm)
 
-function mNew( phi, psi_l, cc, tl, z, m, ared, dt)
-	return max(((dt/ VCM)*(a_sv(phi, tl, psi_l, z, m) - a_vc(phi, cc, tl, z, m, ared) + r_dv(phi, tl))) + m, 0.)
+function mNew(phi, psi_l, cc, tl, z, m, ared, dt)
+	return math.max(((dt/ VCM)*(a_sv(phi, tl, psi_l, z, m) - a_vc(phi, cc, tl, z, m, ared) + r_dv(phi, tl))) + m, 0.)
 end
 --Malic acid concentration
 
---[[Don't think I am doing this loop correctly
-function CAM:process(adv,t)
-  adv = self.adv
-  t = self.t
-  for i = 1,adv do
-    local dx = self.......trail off 
-    ]]
+
+-- INITIAL CONDITIONS:
+
+duration = 10 -- days
+
+ca = 400      -- atmospheric CO2 concentration, ppm
+ta = 293      -- atmospheric temperature, deg. K
+rh = 80       -- relative humidity, percent
+phi = 500     -- solar radiation, W/m2
+tl = ta       -- assume leaf temp equal to atmospheric
+psi_l = -0.5  -- MPa; leaf water potential
+
+tempC = ta - 273. -- convert to K
+psat = A_SAT*math.exp((B_SAT*(tempC))/(C_SAT + tempC)) -- saturated vapor pressure in Pa
+qa = 0.622*rh/100.*psat/P_ATM --needs to be in kg/kg, specific humidity in atmosphere
+
+cs = ca
+ci = ciNew(cs, ta, qa)
+cm = cmNew(cs, ta, qa)
+z = Z0
+m = M0
+cc = ccNew(cs, ta, qa, z, m)
+cx = cc
+a_a = {}
+z_a = {}
+m_a = {}
+asc_a = {}
+asv_a = {}
+avc_a = {}
+aphicitl_a = {}
+aphicctl_a = {}
+ci_a = {}
+cc_a = {}
+cs_a = {}
+
+
+function breath_of_the_plant()
+  ci = ciNew(cs, ta, qa)
+	cm = cmNew(cs, ta, qa)
+	cc = ccNew(cs, ta, qa, z, m)
+	cx = cc
+	z = zNew(phi, m, z, tl, dt) 
+	m = mNew(phi, psi_l, cc, tl, z, m, ARED, dt)
+	a = an(phi, psi_l, tl, ci, ARED)
+	table.insert(z_a, z)
+  table.insert(m_a, m)
+  table.insert(a_a, a)
+  table.insert(asc_a, a_sc(phi, psi_l, tl, ci, z, m, ARED))
+  table.insert(aphicitl_a, a_phiciTl(phi, ci, tl, ARED))
+  table.insert(aphicctl_a, a_phiciTl(phi, cc, tl, ARED))
+  table.insert(ci_a, ci)
+  table.insert(cc_a, cc)
+end
+--try for loop with fixed light conditions
+for i = 1, 100 do 
+  phi = 250*math.sin(0.00043633*i*dt)+250
+breath_of_the_plant()
+print('m'..i, m)
+end
+    
