@@ -14,7 +14,7 @@ The Sonification requires all the lua and supercollider scipts to function and t
 
 The changes in temperature will only affect the first three pages at current implementation. This maybe changed later but currently the bifurcation script is somewhat isolated from the sonification elements. 
 
-Controls
+Controls:
     
   Encoder 1: Changes Display screen
 
@@ -22,7 +22,8 @@ Controls
 
   Encoder 3: Changes Temperature Settings along 5 pre-set temperatures
 
-Screens
+Screens:
+
 There are four screens available to view on the Norns device while sonification experiment plays.
   
   1. Malic Acid over time display
