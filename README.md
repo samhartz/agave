@@ -28,7 +28,7 @@ Screens:
 There are four screens available to view on the Norns device while sonification experiment plays.
   
   1. Malic Acid over time display
-     
+     ![](Screen_1.png)
         This screen shows the change in malic acid content over the duration of the model. It can be changed to each of the temperature settings to see how the pixel movement changes at each temperature setting
   
   2. Circadian Order over time display
