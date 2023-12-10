@@ -39,7 +39,7 @@ There are four screens available to view on the Norns device while sonification 
      ![](Screen_3.png)
         This screen has the two parameters mapped against one another showing the limit cycle created by these two variables. Temperature settings are available here in order to see how the limit cycle moves to a fixed point with the increased temperature. 
   
-  4. Bifurcation Diagram Temperature vs Circadian Order
+  5. Bifurcation Diagram Temperature vs Circadian Order
      ![](Screen_4.png)
         Displays a bifurcation diagram based on conditions that force the model into chaos.
 
