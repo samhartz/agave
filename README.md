@@ -20,27 +20,36 @@ Controls:
 
   Encoder 2: No function 
 
-  Encoder 3: Changes Temperature Settings along 5 pre-set temperatures
+  Encoder 3: Changes Temperature Settings along 5 pre-set kelvin temperatures.
+      Temps are: 285, 289, 293, 297, 301.
 
 Screens:
 
 There are four screens available to view on the Norns device while sonification experiment plays.
   
   1. Malic Acid over time display
+     
+        This screen shows the change in malic acid content over the duration of the model. It can be changed to each of the temperature settings to see how the pixel movement changes at each temperature setting
   
   2. Circadian Order over time display
+
+        This screen shows the change in circadian order over the duration of the model. It can be changed to each of the temperature settings to see how the pixel movement changes at each temperature setting
   
-  3. Malic Acid vs Circadian Order
+  4. Malic Acid vs Circadian Order
+
+        This screen has the two parameters mapped against one another showing the limit cycle created by these two variables. Temperature settings are available here in order to see how the limit cycle moves to a fixed point with the increased temperature. 
   
-  4. Bifurcation Diagram Temperature vs Circadian Order
+  5. Bifurcation Diagram Temperature vs Circadian Order
+
+        Displays a bifurcation diagram based on conditions that force the model into chaos.
 
 Authors
 Original model by Samantha Hartzell, Mark Bartlett, and Amilcare Porporato
 
-Data Sonification scripts by Jonathan Snyder and Duncan Turley
+Data Sonification and Bifurcation scripts by Jonathan Snyder and Duncan Turley
 
 References
 
 Model is referenced in paper:
 
-Hartzell, Samantha, et al. “Nonlinear Dynamics of the CAM Circadian Rhythm in Response to Environmental Forcing.” Theoretical Biology, vol. 368, 7 Mar. 2015, pp. 83–94, https://doi.org/10.1016/j.jtbi.2014.12.010. Accessed 17 May 2023.
+_Hartzell, Samantha, et al. “Nonlinear Dynamics of the CAM Circadian Rhythm in Response to Environmental Forcing.” Theoretical Biology, vol. 368, 7 Mar. 2015, pp. 83–94, https://doi.org/10.1016/j.jtbi.2014.12.010._
