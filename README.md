@@ -35,8 +35,11 @@ There are four screens available to view on the Norns device while sonification 
 
 Authors
 Original model by Samantha Hartzell, Mark Bartlett, and Amilcare Porporato
+
 Data Sonification scripts by Jonathan Snyder and Duncan Turley
 
 References
+
 Model is referenced in paper:
+
 Hartzell, Samantha, et al. “Nonlinear Dynamics of the CAM Circadian Rhythm in Response to Environmental Forcing.” Theoretical Biology, vol. 368, 7 Mar. 2015, pp. 83–94, https://doi.org/10.1016/j.jtbi.2014.12.010. Accessed 17 May 2023.
