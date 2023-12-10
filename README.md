@@ -2,7 +2,7 @@ CAM
 
 Data Sonification tool for monome norns using CAM photosynthetic model.
 
-Demonstration: Not avaiable yet
+Demonstration: Not available yet
 
 Lines thread: coming soon
 
