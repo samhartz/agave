@@ -14,7 +14,7 @@ The script utilizes lua for the interface and data visualization. Supercolider g
 The sounds created by this script are produced by a lowpass sine fm synthesizer engine taken from [thebangs](https://github.com/catfact/thebangs), a one-shot polysynth engine created by @catfact. The following modulations of the synth engine occur in relation to changes in the CAM model as it is executed: 
 
 * amplitude is mapped to the malic acid content (mn)
-* the cutoff of the synth's lowpass filter is mapped to circadian order (z) (NOTE: what is the definition of circadian order???? maybe this goes in the intro paragraph?)
+* the cutoff of the synth's lowpass filter is mapped to circadian order (z)
 * as execution of the model transitions from z > 0.5 to z < 0.5, the sounds change from a minor chord to a major chord and represents the transition from daytime to night time.
 
 ## Controls
