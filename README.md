@@ -7,7 +7,7 @@ Lines thread: coming soon
 
 # Overview
 
-The model synthesizes sound based on the parameters malic acid content and circadian order from photosynthetic models of CAM (Crassulacean Acid Metabolism) plants. built on an adapted Farquhar et al. model parameterized for _Agave Tequila_. The original model was adapted from Python to Lua for process implementation on the Monome Norns platform. The Norns uses a combination of Lua scripts and Supercollider scripts to achieve sound creation from model outputs. Features live controlable temperature parameter.
+The model synthesizes sound based on the parameters malic acid content and circadian order from photosynthetic models of CAM (Crassulacean Acid Metabolism) plants. built on an adapted Farquhar et al. model parameterized for _Agave Tequilana_. The original model was adapted from Python to Lua for process implementation on the Monome Norns platform. The Norns uses a combination of Lua scripts and Supercollider scripts to achieve sound creation from model outputs. Features live controllable temperature parameter.
 
 The script utilizes lua for the interface and data visualization. Supercolider generates the sonification. 
 
@@ -61,4 +61,4 @@ Data Sonification and Bifurcation scripts by [Jonathan Snyder](http://instagram.
 
 Model is referenced in paper:
 
-_Hartzell, Samantha, et al. “Nonlinear Dynamics of the CAM Circadian Rhythm in Response to Environmental Forcing.” Theoretical Biology, vol. 368, 7 Mar. 2015, pp. 83–94, https://doi.org/10.1016/j.jtbi.2014.12.010._
+_Hartzell, Samantha, et al. “Nonlinear Dynamics of the CAM Circadian Rhythm in Response to Environmental Forcing.” Journal of Theoretical Biology, vol. 368, 7 Mar. 2015, pp. 83–94, https://doi.org/10.1016/j.jtbi.2014.12.010._
