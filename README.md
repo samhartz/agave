@@ -31,19 +31,19 @@ The sounds created by this script are produced by a lowpass sine fm synthesizer 
 There are four screens available to view on the Norns device. Sonification occurs on screens 1-3.
   
   1. Malic Acid over time display
-     ![](Screen_1.png)
+     ![](image/Screen_1.png)
         This screen shows the change in malic acid content over the duration of the model. It can be changed to each of the temperature settings to see how the pixel movement changes at each temperature setting
   
   2. Circadian Order over time display
-     ![](Screen_2.png)
+     ![](image/Screen_2.png)
         This screen shows the change in circadian order over the duration of the model. It can be changed to each of the temperature settings to see how the pixel movement changes at each temperature setting
   
   3. Malic Acid vs Circadian Order
-     ![](Screen_3.png)
+     ![](image/Screen_3.png)
         This screen has the two parameters mapped against one another showing the limit cycle created by these two variables. Temperature settings are available here in order to see how the limit cycle moves to a fixed point with the increased temperature. 
   
   4. Bifurcation Diagram Temperature vs Circadian Order
-     ![](Screen_4.png)
+     ![](image/Screen_4.png)
         Displays a bifurcation diagram based on conditions that force the model into chaos.
 
 # Requirements
