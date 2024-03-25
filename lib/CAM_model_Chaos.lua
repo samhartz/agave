@@ -1,109 +1,151 @@
 --CAM Model for fixed conditions 
 
---General params
+function cam_init(temp)
+  --General params
+  timestepM = 30 --Model change in time at each step (min)
+  timestepD = 30 -- timestep of input data 
+  dt = timestepM*60. -- no. of seconds in timestep, used to advance differential equations
 
-timestepM = 30 --Model change in time at each step (min)
-timestepD = 30 -- timestep of input data 
-dt = timestepM*60. -- no. of seconds in timestep, used to advance differential equations
+  --General Constants
+  LAMBDA_W = 2.5*10^6 -- Latent heat of water vaporization (J/kg )
+  LAMBDA_L = 550.*10^-9 -- Wavelength of light (m)
+  H = 6.63*10^-34 -- Planck's constant (J s)
+  CC = 3.00*10^8 -- Speed of light (m/s)
+  EP = (H*CC)/LAMBDA_L -- Energy of photon (J)
+  g = 9.8       --Gravity (m/s^2)
+  RHO_W = 998.  -- Water density (kg/m^3)
+  CP_A = 1012.  --Specific Heat of Air (J/(kg K))
+  R_A = 290.    -- Specific Gas Constant for Air (J/(kg K))
+  NA = 6.022*10^23 -- Avogadro's Constant (1/mol)
+  R = 8.314;    --Universal Gas Constant (J/(mol K))
+  VW = 18.02/(RHO_W*1000.) -- Molar volume of water (mol/m3)
 
---General Constants
-LAMBDA_W = 2.5*10^6 -- Latent heat of water vaporization (J/kg )
-LAMBDA_L = 550.*10^-9 -- Wavelength of light (m)
-H = 6.63*10^-34 -- Planck's constant (J s)
-CC = 3.00*10^8 -- Speed of light (m/s)
-EP = (H*CC)/LAMBDA_L -- Energy of photon (J)
-g = 9.8       --Gravity (m/s^2)
-RHO_W = 998.  -- Water density (kg/m^3)
-CP_A = 1012.  --Specific Heat of Air (J/(kg K))
-R_A = 290.    -- Specific Gas Constant for Air (J/(kg K))
-NA = 6.022*10^23 -- Avogadro's Constant (1/mol)
-R = 8.314;    --Universal Gas Constant (J/(mol K))
-VW = 18.02/(RHO_W*1000.) -- Molar volume of water (mol/m3)
+  -- Atmospheric parameters
+  P_ATM = 101.325*10^3 -- Atmospheric pressure (Pa)
+  RHO_A = 1.27  -- Air Density (kg/m^3)
+  --ca = 350.   -- Atmopsheric CO2 concentration (ppm)
+  --gamma_w = (P_ATM*CP_A)/(.622*LAMBDA_W);--Psychrometric constant for Penman Equation (J/(K-m^3))
+  GAMMA_THETA  = 4.78 -- (K/km)
+  B = 0.        -- Empirical factor for boundary layer growth
+  A_SAT = 613.75
+  B_SAT = 17.502
+  C_SAT = 240.97
+  RHO_V = 0.87  -- Density of water vapor (kg/m3)
+  CP_W = 4184.  -- specific heat of water (J/kg/K)
 
--- Atmospheric parameters
-P_ATM = 101.325*10^3 -- Atmospheric pressure (Pa)
-RHO_A = 1.27  -- Air Density (kg/m^3)
---ca = 350.   -- Atmopsheric CO2 concentration (ppm)
---gamma_w = (P_ATM*CP_A)/(.622*LAMBDA_W);--Psychrometric constant for Penman Equation (J/(K-m^3))
-GAMMA_THETA  = 4.78 -- (K/km)
-B = 0.        -- Empirical factor for boundary layer growth
-A_SAT = 613.75
-B_SAT = 17.502
-C_SAT = 240.97
-RHO_V = 0.87  -- Density of water vapor (kg/m3)
-CP_W = 4184.  -- specific heat of water (J/kg/K)
+  -- General photosynthetic params
+  TO = 293.2    -- Reference Temperature for photosynthetic parameters (K)
+  GAMMA_1 = .0451 -- Parameter for temp dependence of CO2 compensation point (1/K)
+  GAMMA_2 = .000347 -- Parameter for temp dependence of CO2 compensation point (1/K^2)
+  KC0 = 302.    -- Michaelis constant for C02 at TO (umol/mol)
+  KO0 = 256.    -- Michaelis constant for 02 at TO (mmol/mol)
+  OI = .209     -- Oxygen Concentration (mol/mol)
+  SVC = 649.    -- Entropy term for carboxylation (J/mol)
+  SVQ = 646.    -- Entropy term for e-transport (J/mol)
+  HKC =  59430. -- Activation Energy for Kc (J/mol)
+  HKO =  36000. -- Activation Energy for Ko (J/mol)
+  HKR =  53000. -- Activation Energy for Rd (J/mol)
+  HDJ = 200000. -- Deactivation Energy for Jmax (J/mol)
+  HAJ = 50000.  -- Activation Energy for Jmax (J/mol)
+  RD0 = .32     -- Standard Dark respiration at 25 C (umol/(m^2s))
+  HAV =  72000. -- Activation Energy for Vc,max (J/mol)
+  HDV =  200000.-- Deactivation Energy for Vc,max (J/mol)
 
--- General photosynthetic params
-TO = 293.2    -- Reference Temperature for photosynthetic parameters (K)
-GAMMA_1 = .0451 -- Parameter for temp dependence of CO2 compensation point (1/K)
-GAMMA_2 = .000347 -- Parameter for temp dependence of CO2 compensation point (1/K^2)
-KC0 = 302.    -- Michaelis constant for C02 at TO (umol/mol)
-KO0 = 256.    -- Michaelis constant for 02 at TO (mmol/mol)
-OI = .209     -- Oxygen Concentration (mol/mol)
-SVC = 649.    -- Entropy term for carboxylation (J/mol)
-SVQ = 646.    -- Entropy term for e-transport (J/mol)
-HKC =  59430. -- Activation Energy for Kc (J/mol)
-HKO =  36000. -- Activation Energy for Ko (J/mol)
-HKR =  53000. -- Activation Energy for Rd (J/mol)
-HDJ = 200000. -- Deactivation Energy for Jmax (J/mol)
-HAJ = 50000.  -- Activation Energy for Jmax (J/mol)
-RD0 = .32     -- Standard Dark respiration at 25 C (umol/(m^2s))
-HAV =  72000. -- Activation Energy for Vc,max (J/mol)
-HDV =  200000.-- Deactivation Energy for Vc,max (J/mol)
+  --CAM params
 
---CAM params
-
-A1 = .8*15.   -- 0.6*15. # this is the value consistent with the Leuning model
-GAMMA_0 = 34.6
-RC = 0.5
-GMGSRATIO = 1.
-TR = 90.;     -- Relaxation time for circadian oscillator (min)
-C0 = 3000.    -- parameter for decarboxylation of malic acid (umol/mol)
-ALPHA_1 = 1/100.
-ALPHA_2 = 1/7. 
-K = .003 
-TOPT = 288.65 -- (K)
-VCM = 0.0027  -- Value controlling relative storage of malate (m)
-MU = .5       -- Circadian oscillator constant
-BETA = 2.764  -- Circadian oscillator constant
-CIRC_1 = .365 -- Circadian oscillator constant
-CIRC_2 = .55  -- Circadian oscillator constant
-CIRC_3 = 10.  -- Circadian oscillator constant
-Z0 = .55      -- Initial value of z (-)
-M0 = 0.       -- 1000. # 0. Initial Malic Acid Carbon Concentration (umol/m^3)
-TH = 302.65   -- 302.65 High temperature for CAM model (K)
-TW = 283.15   -- 283.15 Low temperature for CAM model (K)
-KAPPA_2 = .1  -- Quantum yield of photosynthesis (mol CO2/mol photon) (note that this overrides the value of 0.3 for typical photosynthesis)
+  A1 = .8*15.   -- 0.6*15. # this is the value consistent with the Leuning model
+  GAMMA_0 = 34.6
+  RC = 0.5
+  GMGSRATIO = 1.
+  TR = 90.;     -- Relaxation time for circadian oscillator (min)
+  C0 = 3000.    -- parameter for decarboxylation of malic acid (umol/mol)
+  ALPHA_1 = 1/100.
+  ALPHA_2 = 1/7. 
+  K = .003 
+  TOPT = 288.65 -- (K)
+  VCM = 0.0027  -- Value controlling relative storage of malate (m)
+  MU = .5       -- Circadian oscillator constant
+  BETA = 2.764  -- Circadian oscillator constant
+  CIRC_1 = .365 -- Circadian oscillator constant
+  CIRC_2 = .55  -- Circadian oscillator constant
+  CIRC_3 = 10.  -- Circadian oscillator constant
+  Z0 = .55      -- Initial value of z (-)
+  M0 = 0.       -- 1000. # 0. Initial Malic Acid Carbon Concentration (umol/m^3)
+  TH = 302.65   -- 302.65 High temperature for CAM model (K)
+  TW = 283.15   -- 283.15 Low temperature for CAM model (K)
+  KAPPA_2 = .1  -- Quantum yield of photosynthesis (mol CO2/mol photon) (note that this overrides the value of 0.3 for typical photosynthesis)
 
 
---Agave params
+  --Agave params
 
-ZR = 0.3
-LAI = 6.
-GCUT = 0.
-GA = 61.      -- has been 61 previously...29 in marks paper
-RAIW = 3.
-GPMAX = .04
+  ZR = 0.3
+  LAI = 6.
+  GCUT = 0.
+  GA = 61.      -- has been 61 previously...29 in marks paper
+  RAIW = 3.
+  GPMAX = .04
 
-GWMAX = .002
-VWT = .00415
-CAP = 0.27
+  GWMAX = .002
+  VWT = .00415
+  CAP = 0.27
 
-VCMAX0 = 19.5 --19.5
-JMAX0 = 39.   -- 39.
-MMAX = 130000000. -- 130000000.  # max concentration of malic acid (umol/m^3)
-AMMAX =  11.1 -- 11.1# rate of malic acid storage flux (umol/(m^2 s)
+  VCMAX0 = 19.5 --19.5
+  JMAX0 = 39.   -- 39.
+  MMAX = 130000000. -- 130000000.  # max concentration of malic acid (umol/m^3)
+  AMMAX =  11.1 -- 11.1# rate of malic acid storage flux (umol/(m^2 s)
 
-PSILA0 = -3.
-PSILA1 = -0.5
+  PSILA0 = -3.
+  PSILA1 = -0.5
 
-ARED = 1.
-LIGHT_ATTEN = 1.
+  ARED = 1.
+  LIGHT_ATTEN = 1.
 
---- CODE FOR RUNNING MODEL (DEFINITIONS BELOW)
-duration = 10 -- days
+  --- CODE FOR RUNNING MODEL (DEFINITIONS BELOW)
+  duration = 10 -- days
 
---print(ARED)
+  --print(ARED)
+
+  -- INITIAL CONDITIONS:
+  ta = temp --301 --285      -- atmospheric temp of chaos in paper
+  i = 1
+  duration = 10 -- days
+
+  ca = 400      -- atmospheric CO2 concentration, ppm
+  --ta = 293      -- atmospheric temperature, deg. K
+  rh = 80       -- relative humidity, percent
+  phi_max = 400  -- solar radiation
+  phi = phi_max
+  psi_l = -0.5  -- MPa; leaf water potential
+
+
+  
+  tl = ta       -- assume leaf temp equal to atmospheric
+  tempC = ta - 273. -- convert to K
+  psat = A_SAT*math.exp((B_SAT*(tempC))/(C_SAT + tempC)) -- saturated vapor pressure in Pa
+  qa = 0.622*rh/100.*psat/P_ATM --needs to be in kg/kg, specific humidity in atmosphere
+
+  cs = ca
+  ci = ciNew(cs, ta, qa)
+  cm = cmNew(cs, ta, qa)
+  z = Z0
+  m = M0
+  mn = m/MMAX
+  cc = ccNew(cs, ta, qa, z, m)
+  cx = cc
+  a_a = {}
+  z_a = {}
+  m_a = {}
+  asc_a = {}
+  asv_a = {}
+  avc_a = {}
+  aphicitl_a = {}
+  aphicctl_a = {}
+  ci_a = {}
+  cc_a = {}
+  cs_a = {}
+  mn_a = {}
+end
+
 --General Functions
 
 function steps(duration, timestepM)
@@ -318,58 +360,25 @@ function mNew(phi, psi_l, cc, tl, z, m, ared, dt)
 	return math.max(((dt/ VCM)*(a_sv(phi, tl, psi_l, z, m) - a_vc(phi, cc, tl, z, m, ared) + r_dv(phi, tl))) + m, 0.)
 end
 
-function phi_new(i, dt)
+function phi_new(i, dt, phi_maxb)
   t=(i*dt)/3600 -- t is time in hours
   if t % 24 < 12 then return 0
-  else return (phi_max/36)*(-(t % 24)^2 + 36 * (t % 24) - 288) 
+  else return (phi_maxb/36)*(-(t % 24)^2 + 36 * (t % 24) - 288) 
   end
 end
   
+--function tl_new(t_av, A_t, i, dt)
+  --w = (2*math.pi)/24
+  --t = dt/3600 * i 
+  --return t_av + A_t*math.sin(w*t)
+--end
   --Malic acid concentration
 
 
--- INITIAL CONDITIONS:
-i = 1
-duration = 10 -- days
 
-ca = 400      -- atmospheric CO2 concentration, ppm
---ta = 293      -- atmospheric temperature, deg. K
-ta = 285      -- atmospheric temp of chaos in paper
-rh = 80       -- relative humidity, percent
-phi_max = 250   -- solar radiation
-phi = phi_max
-psi_l = -0.5  -- MPa; leaf water potential
-
-
--- copied into loop
-tl = ta       -- assume leaf temp equal to atmospheric
-tempC = ta - 273. -- convert to K
-psat = A_SAT*math.exp((B_SAT*(tempC))/(C_SAT + tempC)) -- saturated vapor pressure in Pa
-qa = 0.622*rh/100.*psat/P_ATM --needs to be in kg/kg, specific humidity in atmosphere
-
-cs = ca
-ci = ciNew(cs, ta, qa)
-cm = cmNew(cs, ta, qa)
-z = Z0
-m = M0
-mn = m/MMAX
-cc = ccNew(cs, ta, qa, z, m)
-cx = cc
-a_a = {}
-z_a = {}
-m_a = {}
-asc_a = {}
-asv_a = {}
-avc_a = {}
-aphicitl_a = {}
-aphicctl_a = {}
-ci_a = {}
-cc_a = {}
-cs_a = {}
-mn_a = {}
 
 -- Function that sets all the variables and puts them into the tables that they need
-function breath_of_the_plant(phi)
+function breath_of_the_plant(phi_max)
   ci = ciNew(cs, ta, qa)
 	cm = cmNew(cs, ta, qa)
 	cc = ccNew(cs, ta, qa, z, m)

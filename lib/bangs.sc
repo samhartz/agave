@@ -17,7 +17,7 @@ Bangs {
 	// modulated another way
 	*square_mod2 {
 		arg freq, pw, cutoff, gain, env;
-		^MoogFF.ar(Pulse.ar(freq, pw * env), (cutoff * env).min(16000).max(10), gain);
+		^MoogFF.ar(Pulse.ar(freq, pw * env), (cutoff * env).min(523.25).max(10), gain);
 	}
 
 	// lowpass sine fm
