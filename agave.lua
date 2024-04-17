@@ -278,7 +278,7 @@ function redraw()  -- here we draw the pixel created by pixel.lua and display it
     if snazzypage == 1 then
       malictime = malictime + 1
       screen.move(50,24)
-      scrn_loc_y = util.linlin(0, 1, 1, 64, mn)
+      scrn_loc_y = util.linlin(0, 1, 64, 1, mn)
       scrn_loc_y = math.floor(scrn_loc_y)
       screen.pixel(malictime, scrn_loc_y)
       screen.stroke()
@@ -289,7 +289,7 @@ function redraw()  -- here we draw the pixel created by pixel.lua and display it
     elseif snazzypage == 2 then
       circadiantime  = circadiantime  + 1
       screen.move(50,24)
-      scrn_loc_y = util.linlin(0, 1, 1, 64, z)
+      scrn_loc_y = util.linlin(0, 1, 64, 1, z)
       scrn_loc_y = math.floor(scrn_loc_y) 
       screen.pixel(circadiantime, scrn_loc_y)
       screen.stroke()
@@ -301,7 +301,7 @@ function redraw()  -- here we draw the pixel created by pixel.lua and display it
       screen.move(50,24)
       scrn_loc_x = util.linlin(0, 1, 1, 127, z)
       scrn_loc_x = math.floor(scrn_loc_x)
-      scrn_loc_y = util.linlin(0, 1, 1, 64, mn)
+      scrn_loc_y = util.linlin(0, 1, 64, 1, mn)
       scrn_loc_y = math.floor(scrn_loc_y) 
       controller:create_pixel(scrn_loc_x, scrn_loc_y)
       controller:display_pixels()
@@ -351,48 +351,3 @@ function draw_snazzypage4(r_values, z_values, min, max)
   end
 end
 --------------------------------------------------------------------------------
-
-
-
-
---[[[
-old snazypage==4 code
-elseif snazzypage == 4 then
-      if snazzy4_loaded == true then
-        return
-      end
-      screen.move(50,24)
-      -- find_local_extrema(array)
-      local r_values, z_values = bifurcation_diagram()
-      --print(z_values)
-      -- for i = 1, #z_values do  
-      local min, max = find_min_max(z_values)
-      -- end
-      -- print(z)
-      for i=1, #z_values do
-        scrn_loc_x = util.linlin(280, 301, 1, 127, r_values[i])
-        
-        
-        --scrn_loc_y = util.linlin(min, max, 1, 64, z)
-        scrn_loc_y = util.linlin(min, max, 1, 64, z_values[i])
-        
-        -- print("scrn_loc_x, scrn_loc_y", scrn_loc_x, scrn_loc_y)
-        --scrn_loc_y = util.linlin(0, 0.2, 1, 64, z_coords[i])
-        table.insert(scr_loc_xy_values,{scrn_loc_x,scrn_loc_y})
-        scrn_loc_x = math.floor(scrn_loc_x)
-        scrn_loc_y = math.floor(scrn_loc_y)
-        --screen.move(scrn_loc_x, scrn_loc_y)
-        screen.pixel(scrn_loc_x, scrn_loc_y)
-        --controller:create_pixel(scrn_loc_x, scrn_loc_y)
-        --controller:display_pixels()
-        screen.stroke()
-        -- screen.update()
-      end  
-      if snazzy4_loaded == false then
-        snazzy4_loaded = true
-        print("save scr_loc_xy_values",#scr_loc_xy_values)
-        tab.save(scr_loc_xy_values,norns.state.data.."scr_loc_xy_values.tab")
-      end  
-    end
-
-]]
