@@ -21,14 +21,15 @@ The sounds created by this script are produced by a lowpass sine fm synthesizer 
     
   Encoder 1: Changes Display screen
 
-  Encoder 2: No function 
+  Encoder 2: (screens 1-3) Changes light levels along 6 pre-set watts/m^2 values.
+      Light levels are: 10, 50, 150, 300, 500
 
-  Encoder 3 (screens 1-3): Changes Temperature Settings along 5 pre-set kelvin temperatures.
+  Encoder 3: (screens 1-3) Changes Temperature Settings along 5 pre-set kelvin temperatures.
       Temps are: 285, 289, 293, 297, 301.
 
 ## Screens
 
-There are four screens available to view on the Norns device. Sonification occurs on screens 1-3.
+There are four screens available to view on the Norns device. 
   
   1. Malic Acid over time display
      ![](images/Screen_1.png)
