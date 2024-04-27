@@ -29,7 +29,7 @@ The sounds created by this script are produced by a lowpass sine fm synthesizer 
 
 ## Screens
 
-There are four screens available to view on the Norns device. Sonification occurs on screens 1-3.
+There are four screens available to view on the Norns device. 
   
   1. Malic Acid over time display
      ![](images/Screen_1.png)
