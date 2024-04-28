@@ -48,6 +48,8 @@ There are four screens available to view on the Norns device.
      ![](images/Screen_4.png)
         Displays a bifurcation diagram based on conditions that force the model into chaos.
 
+Loud noise warning: sudden and frequent changes to the parameters can cause loud sounds.
+
 # Requirements
 * [monome norns](https://monome.org/norns)
 
