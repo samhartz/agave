@@ -1,6 +1,6 @@
 // "the" bangs
 
-Thebangs  {
+ThebangsAg  {
 	classvar maxVoices = 3;//32;
 
 	var server;
@@ -46,12 +46,12 @@ Thebangs  {
 		amp = 0.1;
 		pan = 0.0;
 
-		bangs = Bangs.class.methods.collect({|m| m.name});
+		bangs = BangsAg.class.methods.collect({|m| m.name});
 		bangs.do({|name| postln(name); });
 
 		this.whichBang = 0;
 
-		voicer = OneshotVoicer.new(maxVoices);
+		voicer = OneshotVoicerAg.new(maxVoices);
 	}
 
 	//--- setters
@@ -98,7 +98,7 @@ Thebangs  {
 				perc = EnvGen.ar(Env.perc(attack, release), doneAction:Done.freeSelf);
 				ender = EnvGen.ar(Env.asr(0, 1, 0.01), gate:gate, doneAction:Done.freeSelf);
 				
-				snd = Bangs.perform(thebang, hz1, mod1, hz2, mod2, perc);
+				snd = BangsAg.perform(thebang, hz1, mod1, hz2, mod2, perc);
         // z.poll;
         
         //filter
@@ -106,7 +106,7 @@ Thebangs  {
         // snd = MoogFF.ar(snd, z, 0.3);
         
         //delay
-        snd = CombN.ar(Decay.ar(snd, 1/z, snd), 0.5, 0.5, 3);
+        snd = CombN.ar(Decay.ar(snd, 1/z, snd), 0.5, 0.5, 3) * 0.5;
         // snd = CombN.ar(Decay.ar(snd, 0.2, snd), 0.5, 0.5, 3);
 
         //granulation

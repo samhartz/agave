@@ -1,6 +1,6 @@
 // class for generating different ugen subgraphs to stick in thebangs
 
-Bangs {
+BangsAg {
 
 	// the classic polyperc sound.
 	*square {

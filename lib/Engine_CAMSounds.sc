@@ -9,7 +9,7 @@ Engine_CAMSounds : CroneEngine {
 	}
 
 	alloc {
-		thebangs = Thebangs.new(Crone.server);
+		thebangs = ThebangsAg.new(Crone.server);
 
 		// TODO: should probably clamp incoming values.
 		// or, at minimum, provide a lua layer which does so

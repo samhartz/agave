@@ -17,7 +17,7 @@ control = include('lib/control')
 bifurcation = include('lib/bifurcation')
 
 snazzypage = 1
-
+text_level = 100
 
 engine.name = 'CAMSounds'
 
@@ -67,6 +67,7 @@ params:set_action("phi_type",function(z)
 end)
 
 --phi levels param for constant levels of light
+phi_max_levels = {"10","50","100","150","300","500"}
 params:add_option("phi_max_levels", "phi max levels", {"10","50","100","150","300","500"}, 1)
 params:set_action("phi_max_levels",function(t)
   print(t)
@@ -179,6 +180,7 @@ end
 -- encoder
 function enc(n, delta)
   screen.clear()
+  text_level = 100
   if n==1 then
     --Change the page
     snazzypage = util.clamp(snazzypage + delta,1,4)
@@ -267,14 +269,21 @@ function redraw()  -- here we draw the pixel created by pixel.lua and display it
       snazzy4_loaded = false
     end
 
+    if text_level > 0 then text_level = math.floor(text_level-0.1) end
+
     screen.line_width(1)
-    screen.level(10)
+    screen.level(text_level)
     screen.aa(1)
     screen.move(125,10)
     screen.text_right(snazzypage..'/4')
-    screen.move(125,20)
-    screen.text_right("temp "..ta)
-    screen.stroke()
+    if snazzypage < 4 then
+      screen.move(125,20)
+      screen.text_right("temp "..ta)
+      screen.move(125,30)
+      screen.text_right("light ".. phi_max_levels[params:get("phi_max_levels")])
+      screen.stroke()
+    end
+    screen.level(10)
     if snazzypage == 1 then
       malictime = malictime + 1
       screen.move(50,24)
@@ -320,7 +329,7 @@ function redraw()  -- here we draw the pixel created by pixel.lua and display it
       else
         print("z_a < max_extrema",#z_a)
         -- screen.clear()
-        screen.move(64,32)
+        screen.move(64,45)
         screen.text_center("z_a < max extrema...hold tight")
         screen.stroke()
       end

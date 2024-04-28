@@ -3,7 +3,7 @@
 // - synths are self-freeing
 // - synths have a \gate argument, and setting this to zero will free the synth quickly
 
-OneshotVoicer {
+OneshotVoicerAg {
 	var <maxVoices = 32;
 
 	// the voice array
@@ -88,7 +88,7 @@ OneshotVoicer {
 		idxClamp = idx.max(0).min(voices.size-1);
 		v = voices[idxClamp];
 
-		postln("stealing: " ++ idx ++ " (" ++ idxClamp ++ ")");
+		// postln("stealing: " ++ idx ++ " (" ++ idxClamp ++ ")");
 		
 		if (v.isNil.not, {
 			if (v.isPlaying, {

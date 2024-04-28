@@ -14,18 +14,19 @@ The script utilizes lua for the interface and data visualization. Supercolider g
 The sounds created by this script are produced by a lowpass sine fm synthesizer engine taken from [thebangs](https://github.com/catfact/thebangs), a one-shot polysynth engine created by @catfact. The following modulations of the synth engine occur in relation to changes in the CAM model as it is executed: 
 
 * amplitude is mapped to the malic acid content (mn)
-* the cutoff of the synth's lowpass filter is mapped to circadian order (z)
+* the cutoff of the synth's bandpass filter and comb delay line is mapped to circadian order (z)
 * as execution of the model transitions from z > 0.5 to z < 0.5, the sounds change from a minor chord to a major chord and represents the transition from daytime to night time.
 
 ## Controls
     
   Encoder 1: Changes Display screen
 
-  Encoder 2: (screens 1-3) Changes light levels along 6 pre-set watts/m^2 values.
-      Light levels are: 10, 50, 150, 300, 500
-
-  Encoder 3: (screens 1-3) Changes Temperature Settings along 5 pre-set kelvin temperatures.
+  Encoder 2: (screens 1-3) Changes Temperature Settings along 5 pre-set kelvin temperatures.
       Temps are: 285, 289, 293, 297, 301.
+
+  Encoder 3: (screens 1-3) Changes light levels along 6 pre-set watts/m^2 values.
+      Light levels are: 10, 50, 100, 150, 300, 500
+
 
 ## Screens
 
