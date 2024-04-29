@@ -1,5 +1,5 @@
 -- agave
--- version0.5@duturley
+-- version0.6 @duturley
 -- https://llllllll.co/t/agave
 --
 -- Data sonification of 
