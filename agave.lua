@@ -1,10 +1,11 @@
 -- agave
 -- version0.5@duturley
--- <lines link>
+-- https://llllllll.co/t/agave
 --
--- <tag line>
---;r
--- <instructions go here
+-- Data sonification of 
+-- CAM photosynthesis model
+--
+-- controls: e1, e2, e3
 
 -- lines starting with "--" are comments, they don't get executed
 mu = require('musicutil')
@@ -20,20 +21,8 @@ snazzypage = 1
 text_level = 100
 
 engine.name = 'CAMSounds'
+refresh_clock = nil
 
--- system clock tick
--- this function is started by init() and runs forever
--- if the sequence is on, it steps forward on each clock tick
--- tempo is controlled via the global clock, which can be set in the PARAMETERS menu 
--- tick = function()
---   while true do
---    --clock.sync(1)
---    clock.sleep(1/10)
---    table.insert(state_table.x, mn)
---    table.insert(state_table.y, z)
---    --table.insert(state_table.z, lorenz.state[3])
---   end
--- end
 
 
 --------------------------------------------------------------------------------
@@ -52,8 +41,7 @@ params:set_action("temp_setting", function(x)
   elseif x==5 then
     ta = 301
   end
-  print("new temp setting...re init", ta) 
-  init()
+  init(true)
 end)
 
 params:add_option("phi_type", "phi type", {"phi constant","phi day/night"})
@@ -70,7 +58,6 @@ end)
 phi_max_levels = {"10","50","100","150","300","500"}
 params:add_option("phi_max_levels", "phi max levels", {"10","50","100","150","300","500"}, 1)
 params:set_action("phi_max_levels",function(t)
-  print(t)
   if t==1 then
     phi_max = 10
   elseif t==2 then
@@ -88,11 +75,11 @@ params:set_action("phi_max_levels",function(t)
 end) 
 
 -- init runs first!
-function init()
-  if refresh_clock then clock.cancel(refresh_clock) end
+function init(reinit)
+
   BP = 10 -- BP = brightness of pixel variable for changing if needed
   --steps = 1
-  i = 1   -- i is used to establish the beginning value of the loops
+  i= 1   -- iis used to establish the beginning value of the loops
   malictime = 0
   circadiantime = 0
 
@@ -103,26 +90,32 @@ function init()
 
   -- configure stuff
   local temp = temps[params:get("temp_setting")]
-  print("init temp", temp)
+  -- print("init temp", temp)
   cam_init(temp)
 
-  engine.algoName('square_mod1')
-  engine.gain(5)
-  engine.release(6)
-  engine.attack(.01)
-  engine.pw(7)
-  local min_chord = mu.generate_chord(40, "minor")
-  min_chord_seq = s{table.unpack(min_chord)}
+  if reinit == false or reinit == nil then
+    engine.algoName('square_mod1')
+    engine.gain(5)
+    engine.release(6)
+    engine.attack(.01)
+    engine.pw(7)
+    local min_chord = mu.generate_chord(40, "minor")
+    min_chord_seq = s{table.unpack(min_chord)}
 
-  local maj_chord = mu.generate_chord(120, "major")
-  maj_chord_seq = s{table.unpack(maj_chord)}
+    local maj_chord = mu.generate_chord(120, "major")
+    maj_chord_seq = s{table.unpack(maj_chord)}
+
+  end
+  
+  if refresh_clock ~= nil then 
+    clock.cancel(refresh_clock) 
+  end
 
   refresh_clock = clock.run(function()  -- redraw the screen and grid at 15fps
-    -- need to make it so this i loop runs for the length of time that steps function calculates
-    while i > 0 do    -- for iteration to be non permanent and work with chaos equation
-      -- clock.sleep(1/15)
+    -- need to make it so this loop runs for the length of time that steps function calculates
+    -- for iteration to be non permanent and work with chaos equation
+    while i > 0 do    
       clock.sleep(1/15)
-
 
       tl = ta       -- assume leaf temp equal to atmospheric
 
@@ -136,42 +129,16 @@ function init()
       --this is where I need to call phi new(i, dt, phi_maxb)
       --tl_new(t_av, A_t, i, dt)
       --phi_new(i, dt, phi_maxb)
-      if snazzypage < 4 then
-      end
       breath_of_the_plant()
-
-   
+  
       malic_content()
-      if i % 15 == 0 then
+      if i% 15 == 0 then
         cirdian_rythm()
       end
       redraw()
-      i = i + 1
+      i= i+ 1
     end
   end)
-
-  norns.enc.sens(1,8)   -- set the knob sensitivity
-  norns.enc.sens(2,4)
-  
-
-  --params:add_option("A_t", "temp amplitude", {'0','2','4','6','8','10'}, 1)
-  --params:set_action("A_t", function(y)
-    --print(y)
-    --if y==1 then
-      --A_t = 0
-    --elseif y==2
-      --A_t = 2
-    --elseif y==3
-      --A_t = 4
-    --elseif y==4
-      --A_t = 6
-    --elseif y==5  
-      --A_t = 8
-    --elseif y==6
-      --A_t = 10
-    --end
-  --end
-  
 end
 
 
@@ -182,17 +149,17 @@ function enc(n, delta)
   screen.clear()
   text_level = 100
   if n==1 then
+    -- E1
     --Change the page
     snazzypage = util.clamp(snazzypage + delta,1,4)
-    print("snazzypage",snazzypage)
-  elseif n==2 then
-    -- E2 do something
+  elseif n==2 and snazzypage < 4 then
+    -- E2 
     local temp_setting = params:get("temp_setting")
     local new_setting = util.clamp(temp_setting+delta,1,5)
     params:set("temp_setting",new_setting)
 
-  elseif n==3 then
-    -- E3 do something
+  elseif n==3 and snazzypage < 4 then
+    -- E3 
     local phi_max_levels = params:get("phi_max_levels")
     local new_setting = util.clamp(phi_max_levels+delta,1,6)
     params:set("phi_max_levels",new_setting)
@@ -263,9 +230,7 @@ end
 function redraw()  -- here we draw the pixel created by pixel.lua and display it through a callback to the controller that tracks it.
   if mn ~= nil then 
     screen.clear()
-    if snazzy4_loaded == false then
-    end
-    if snazzypage < 4 then
+    if snazzypage < 4 and snazzy4_loaded == true then
       snazzy4_loaded = false
     end
 
@@ -318,17 +283,16 @@ function redraw()  -- here we draw the pixel created by pixel.lua and display it
       --screen.update()
     elseif snazzypage == 4 then
       if snazzy4_loaded == false then
-        init()
+        init(true)
         snazzy4_loaded = true
       end
       if #z_a > max_extrema then
         r_values4, z_values4 = bifurcation_diagram()
         min4, max4 = find_min_max(z_values4)
-        -- print("load snazzypage 4",#r_values4, #z_values4, min4, max4)
+        -- print("load snazzypage 4",#r_values4, #z_values4, min4, max4)        
         draw_snazzypage4(r_values4,z_values4,min4,max4)
       else
-        print("z_a < max_extrema",#z_a)
-        -- screen.clear()
+        -- print("z_a < max_extrema",#z_a)
         screen.move(64,45)
         screen.text_center("z_a < max extrema...hold tight")
         screen.stroke()
@@ -356,7 +320,6 @@ function draw_snazzypage4(r_values, z_values, min, max)
     snzp4_ix = snzp4_ix + 1
   else 
     snzp4_ix = 1
-    print("restart snzp4_ix")
   end
 end
 --------------------------------------------------------------------------------

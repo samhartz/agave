@@ -1,9 +1,3 @@
---[[control
-version 1.0 @duturley, 
-<lines link> - will attach later
-
-<tag line> chaos, lorenz,
- ]]
 controller = {    -- creates global variable controller for the use in all 
     x = x,
     y = y,

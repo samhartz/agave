@@ -1,9 +1,3 @@
---[[pixel
-version 1.0 @duturley, 
-<lines link> - will attach later
-
-<tag line> chaos, lorenz,
- ]]
 local Pixel = {}
 
 function Pixel:new(x, y, name) --creates a function using colon allows it to reference itself as self later, rather than a period 

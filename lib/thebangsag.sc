@@ -26,6 +26,8 @@ ThebangsAg  {
 
 	var <voicer;
 
+  var winenv, envbuf;
+
 	*new { arg srv;
 		^super.new.init(srv);
 	}
@@ -46,6 +48,10 @@ ThebangsAg  {
 		amp = 0.1;
 		pan = 0.0;
 
+    // envelope for the grains
+    winenv = Env([0, 1, 0], [0.5, 0.5], [8, -8]);
+    envbuf = Buffer.sendCollection(server, winenv.discretize, 1);
+
 		bangs = BangsAg.class.methods.collect({|m| m.name});
 		bangs.do({|name| postln(name); });
 
@@ -56,12 +62,12 @@ ThebangsAg  {
 
 	//--- setters
 	bang_{ arg name;
-		postln("bang_("++name++")");
+		// postln("bang_("++name++")");
 		thebang = name;
 	}
 
 	whichBang_ { arg i;
-		postln("whichBang_("++i++")");
+		// postln("whichBang_("++i++")");
 		whichbang = i;
 		thebang = bangs[whichbang];
 	}
@@ -84,11 +90,6 @@ ThebangsAg  {
 		fn = {
 			var syn;
       var pan=0, grainEnv, freqdev;
-      var winenv, envbuf;
-
-          // envelope for the grains
-      winenv = Env([0, 1, 0], [0.5, 0.5], [8, -8]);
-      envbuf = Buffer.sendCollection(server, winenv.discretize, 1);
 
 			syn = {
 				arg gate=1, z=400, grainDur=0.1;

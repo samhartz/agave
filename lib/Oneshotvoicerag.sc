@@ -30,7 +30,6 @@ OneshotVoicerAg {
 	}
 
 	stealMode_ { arg mode;
-		postln("steal mode: " ++ mode);
 		stealMode = mode;
 	}
 	
